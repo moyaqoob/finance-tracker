@@ -1,24 +1,19 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
+import SafeScreen from "@/components/SafeScreen";
+import { ClerkProvider } from "@clerk/clerk-expo";
+import { Slot } from "expo-router";
+import "react-native-reanimated";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
 export const unstable_settings = {
-  anchor: '(tabs)',
+  anchor: "(home)",
 };
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
+function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ClerkProvider tokenCache={tokenCache}>
+      <SafeScreen>
+        <Slot />
+      </SafeScreen>
+    </ClerkProvider>
   );
 }
+export default RootLayout;
