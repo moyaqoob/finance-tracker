@@ -1,19 +1,20 @@
 import SafeScreen from "@/components/SafeScreen";
 import { ClerkProvider } from "@clerk/clerk-expo";
-import { Slot } from "expo-router";
-import "react-native-reanimated";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import { Slot } from "expo-router";
 export const unstable_settings = {
   anchor: "(home)",
 };
 
-function RootLayout() {
+function Layout() {
   return (
-    <ClerkProvider tokenCache={tokenCache}>
+    <ClerkProvider
+      tokenCache={tokenCache}
+      publishableKey="pk_test_Z2xhZC1nb2JsaW4tMTYuY2xlcmsuYWNjb3VudHMuZGV2JA">
       <SafeScreen>
         <Slot />
       </SafeScreen>
     </ClerkProvider>
   );
 }
-export default RootLayout;
+export default Layout;

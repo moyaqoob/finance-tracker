@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom:20,
   },
   buttonText: {
     color: COLORS.white,
@@ -89,7 +89,6 @@ export const styles = StyleSheet.create({
     letterSpacing: 2,
   },
 
-  // 🔴 Error styles
   errorBox: {
     backgroundColor: "#FFE5E5",
     padding: 12,
