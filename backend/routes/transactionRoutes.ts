@@ -11,7 +11,7 @@ router.get("/:userId", async (req, res) => {
     const transactions = await sql`
             SELECT * FROM transactions
             WHERE user_id = ${userId} ORDER BY created_at DESC`;
-    console.log("get teh transactions");
+    console.log("get teh transactions",transactions);
     res.status(200).json(transactions);
   } catch (error) {
     console.log("Error occured in the server", error);
