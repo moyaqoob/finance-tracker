@@ -1,27 +1,35 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { StyleSheet } from 'react-native'
-import { Link } from 'expo-router'
-import { useUser } from '@clerk/clerk-expo'
-import { SignOutButton } from '@/components/SignoutButton'
-import { Button } from '@react-navigation/elements'
+import useTransaction from "@/hooks/useTransactions";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+import { Link } from "expo-router";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
 const Home = () => {
-  // const {user} = useUser();
+  const { user } = useUser();
+  const { transactions, summary, isLoading, loadData, deleteTransaction } =
+    useTransaction(user?.id)
+
+  useEffect(()=>{
+    loadData()
+  },[loadData])
+
+  console.log("transaction", transactions)
+  console.log("summary", summary)
+  console.log("userId",user?.id)
   return (
     <View style={styles.container}>
-      <Text style={{color:"000000"}}>
-        hi there 
-      </Text>
-      <Text>
-        username
-        {/* {user?.primaryEmailAddress?.emailAddress} */}
-      </Text>
-      <Link href={'/(auth)/Signin'}>Go to Sign in</Link>
-      <Link href={'/(auth)/Signup'}>Go to Signup</Link>
-      <SignOutButton/>
+      <SignedIn>
+        <Text style={{ color: "000000" }}>
+          Hello {user?.emailAddresses[0].emailAddress}
+        </Text>
+      </SignedIn>
+      <SignedOut>
+        <Link href={"/(auth)/Signin"}>
+          <Text>Sign In</Text>
+        </Link>
+      </SignedOut>
     </View>
-  )
-}
+  );
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -35,5 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-export default Home
+export default Home;

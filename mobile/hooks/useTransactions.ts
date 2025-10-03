@@ -1,6 +1,6 @@
 import axios from "axios";
-import { CANCELLED } from "dns";
 import { useCallback, useState } from "react";
+import { Alert } from "react-native";
 const API_URL = "https://localhost:3000/api/transactions";
 function useTransaction(userId: any) {
   const [transactions, setTransactions] = useState([]);
@@ -32,19 +32,33 @@ function useTransaction(userId: any) {
     }
   }, [userId]);
 
-  const loadData = useCallback(async()=>{
-    if(!userId) return;
+  const loadData = useCallback(async () => {
+    if (!userId) return;
 
     setIsLoading(true);
-    try{
-        await Promise.all([fetchTransactions(),fetchSummary()]);
+    try {
+      await Promise.all([fetchTransactions(), fetchSummary()]);
+    } catch (error) {
+      console.error("Error loading data :", error);
+    } finally {
+      setIsLoading(false);
     }
-    catch(error){
-        console.error("Error loading data :", error)
-    }finally{
-        setIsLoading(false)
+  }, [fetchTransactions, fetchSummary, userId]);
+
+  const deleteTransaction = async (id: any) => {
+    try {
+      const response = await axios.delete(`${API_URL}/transactions/${id}`);
+      if (!response.statusText) throw new Error("Failed to delete transaction");
+
+      loadData();
+      Alert.alert("Sucess", "Transaction deleted Successfully");
+    } catch (error: any) {
+      console.error("Error deleting transaction", error);
+      Alert.alert("Error", error.message);
     }
-  },[fetchTransactions,fetchSummary,userId]);
+  };
+
+  return {transactions,summary,isLoading,loadData,deleteTransaction}
 }
 
 export default useTransaction;
