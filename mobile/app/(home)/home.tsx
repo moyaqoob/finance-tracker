@@ -1,3 +1,5 @@
+import PageLoader from "@/components/PageLoader";
+import Loader from "@/components/PageLoader";
 import useTransaction from "@/hooks/useTransactions";
 import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
@@ -12,9 +14,8 @@ const Home = () => {
     loadData()
   },[loadData])
 
-  console.log("transaction", transactions)
-  console.log("summary", summary)
-  console.log("userId",user?.id)
+  if(isLoading) <PageLoader/>
+
   return (
     <View style={styles.container}>
       <SignedIn>
@@ -27,6 +28,7 @@ const Home = () => {
           <Text>Sign In</Text>
         </Link>
       </SignedOut>
+      <Loader/>
     </View>
   );
 };

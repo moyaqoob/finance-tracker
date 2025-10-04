@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
-const API_URL = "https://localhost:3000/api/transactions";
+const API_URL = process.env.API_URL;
 function useTransaction(userId: any) {
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState({
@@ -10,7 +10,6 @@ function useTransaction(userId: any) {
     expenses: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
-
   const fetchTransactions = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}/${userId}`);
@@ -47,7 +46,7 @@ function useTransaction(userId: any) {
 
   const deleteTransaction = async (id: any) => {
     try {
-      const response = await axios.delete(`${API_URL}/transactions/${id}`);
+      const response = await axios.delete(`${API_URL}/${id}`);
       if (!response.statusText) throw new Error("Failed to delete transaction");
 
       loadData();
@@ -58,7 +57,7 @@ function useTransaction(userId: any) {
     }
   };
 
-  return {transactions,summary,isLoading,loadData,deleteTransaction}
+  return { transactions, summary, isLoading, loadData, deleteTransaction };
 }
 
 export default useTransaction;

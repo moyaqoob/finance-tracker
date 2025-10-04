@@ -30,11 +30,18 @@ export default function SignUpScreen() {
         emailAddress,
         password,
       });
+      console.log("result", result.id);
 
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
-    } catch (err) {
-      console.error("Sign-up error:", JSON.stringify(err, null, 2));
+    } catch (err: any) {
+      if (err.errors?.[0]?.code === "form_password_pwned") {
+        setError(
+          "This password has appeared in a data breach. Please choose a different one."
+        );
+      } else {
+        setError("Signup failed. Please try again.");
+      }
     }
   };
 
@@ -76,8 +83,8 @@ export default function SignUpScreen() {
             <View style={styles.errorBox}>
               <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
               <Text style={styles.errorText}>{error}</Text>
-              <TouchableOpacity onPress={()=>setError("")}>
-                  <Ionicons name="close" size={20} color={COLORS.textLight} />
+              <TouchableOpacity onPress={() => setError("")}>
+                <Ionicons name="close" size={20} color={COLORS.textLight} />
               </TouchableOpacity>
             </View>
           ) : null}
@@ -98,8 +105,8 @@ export default function SignUpScreen() {
 
   return (
     <KeyboardAwareScrollView
-      style={{flex:1}}
-      contentContainerStyle={{flexGrow:1}}
+      style={{ flex: 1 }}
+      contentContainerStyle={{ flexGrow: 1 }}
       enableOnAndroid={true}
       enableAutomaticScroll={true}
     >
