@@ -48,7 +48,6 @@ function useTransaction(userId: any) {
     try {
       const response = await axios.delete(`${API_URL}/${id}`);
       if (!response.statusText) throw new Error("Failed to delete transaction");
-
       loadData();
       Alert.alert("Sucess", "Transaction deleted Successfully");
     } catch (error: any) {
