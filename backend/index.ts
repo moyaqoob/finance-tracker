@@ -4,6 +4,7 @@ import express from "express";
 import { sql } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 import router from "./routes/transactionRoutes.js";
+import job from './config/cron.js'
 dotenv.config();
 
 const app = express();
@@ -12,6 +13,8 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 app.use(rateLimiter)
+
+if(process.env.NODE_ENV ==="production") job.start()
 
 async function initDb() {
   try {
@@ -23,7 +26,7 @@ async function initDb() {
         amount DECIMAL(10,2) NOT NULL,
         category VARCHAR(255) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-      )
+      ) 
     `;
     console.log("Database initialized locally");
   } catch (error) {
@@ -32,11 +35,13 @@ async function initDb() {
   }
 }
 
+app.get("/", (_req, res) => {
+  res.status(200).json({status:"Ok"});
+});
+
+
 app.use("/api/transactions",router)
 
-app.get("/", (_req, res) => {
-  res.send({ message: "Localhost running" });
-});
 
 initDb().then(() => {
   app.listen(4000, () => {
