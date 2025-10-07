@@ -15,15 +15,16 @@ export interface TransactionProps {
 }
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
 
-const CATEGORY_ICONS: Record<string, IoniconName> = {
-  "Food & Drinks": "fast-food",
-  Shopping: "cart",
-  Transportation: "car",
-  Entertainment: "film",
-  Bills: "receipt",
-  Income: "cash",
-  Other: "ellipsis-horizontal",
+export const CATEGORY_ICONS: Record<string, IoniconName> = {
+  "Food & Drinks": "restaurant-outline",
+  Shopping: "cart-outline",
+  Transportation: "car-outline",
+  Entertainment: "film-outline",
+  Bills: "document-text-outline",
+  Income: "cash-outline",
+  Other: "pricetag-outline",
 };
+
 
 const TransactionItem = ({ item, onDelete }: TransactionProps) => {
   const isIncome = parseFloat(item.amount) > 0;

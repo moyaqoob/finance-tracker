@@ -1,5 +1,6 @@
 import images from "@/assets/image";
 import BalanceCard from "@/components/BalanceCard";
+import NoTransactionListContent from "@/components/NoTransactionListContent";
 import PageLoader from "@/components/PageLoader";
 import { SignOutButton } from "@/components/SignoutButton";
 import TransactionItem from "@/components/TransactionItem";
@@ -7,31 +8,51 @@ import { styles } from "@/constants/home.styles";
 import useTransaction from "@/hooks/useTransactions";
 import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import React, { useEffect } from "react";
-import { Alert, FlatList, Image, Text, TouchableOpacity, View, type ListRenderItem } from "react-native";
-import { TransactionProps } from "@/components/TransactionItem";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Image,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Home = () => {
   const { user } = useUser();
+  const router = useRouter();
   const { transactions, summary, isLoading, loadData, deleteTransaction } =
     useTransaction(user?.id);
+  const [refreshing,setRefreshing] = useState(false);
+
+  const onRefresh =async()=>{
+    setRefreshing(true);
+    await loadData();
+    setRefreshing(false);
+  }
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  const handleDelete=(id:string)=>{
-     Alert.alert("Delete Transaction","Are you sure you want to delete this transaction",[
-      {text:"Cancel",style:"cancel"},
-      {text:"Delete",style:"destructive",onPress:()=> deleteTransaction(id)}
-     ])
-  }
+  const handleDelete = (id: string) => {
+    Alert.alert(
+      "Delete Transaction",
+      "Are you sure you want to delete this transaction",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => deleteTransaction(id),
+        },
+      ]
+    );
+  };
 
-
-  
-
-  if (isLoading) return <PageLoader />;
+  if (isLoading && !refreshing) return <PageLoader />;
 
   return (
     <View style={styles.container}>
@@ -47,7 +68,9 @@ const Home = () => {
             <View style={styles.welcomeContainer}>
               <Text style={styles.welcomeText}>Welcome,</Text>
               <Text style={styles.usernameText}>
-                {user?.emailAddresses[0].emailAddress.split("@")[0].replace(/[0-9]/g,"")}
+                {user?.emailAddresses[0].emailAddress
+                  .split("@")[0]
+                  .replace(/[0-9]/g, "")}
               </Text>
             </View>
           </View>
@@ -63,19 +86,21 @@ const Home = () => {
           </View>
         </View>
 
-        <BalanceCard summary={summary}/>
+        <BalanceCard summary={summary} />
         <View style={styles.transactionsHeaderContainer}>
-            <Text style={styles.sectionTitle}>Recent Transactions</Text>
+          <Text style={styles.sectionTitle}>Recent Transactions</Text>
         </View>
-
       </View>
       <FlatList
         style={styles.transactionsList}
         contentContainerStyle={styles.transactionsListContent}
         data={transactions}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <TransactionItem item={item} onDelete={handleDelete} />
         )}
+        ListEmptyComponent={<NoTransactionListContent />}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
       />
     </View>
   );

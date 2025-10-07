@@ -1,12 +1,184 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { CATEGORY_ICONS } from "@/components/TransactionItem";
+import { COLORS } from "@/constants/Colors";
+import { styles } from "@/constants/create.style";
+import { API_URL } from "@/lib/config";
+import { useUser } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { ActivityIndicator, Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const create = () => {
-  return (
-    <View>
-      <Text>create</Text>
-    </View>
-  )
-}
+  const router = useRouter();
+  const { user } = useUser();
+  const [isLoading, setLoading] = useState(true);
+  const [amount, setAmount] = useState("");
+  const [title, setTitle] = useState("");
+  const [isExpense, setIsExpense] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState();
 
-export default create
+  const handleSave = async () => {
+    if (!title.trim())
+      return Alert.alert("Error", "Please enter a transaction title");
+    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+      Alert.alert("Error", "Please enter a valid amount");
+    }
+    if (!selectedCategory)
+      return Alert.alert("Error", "Please select a category");
+    setLoading(true);
+    try {
+      const formattedAmout = isExpense
+        ? -Math.abs(parseFloat(amount))
+        : Math.abs(parseFloat(amount));
+      const response = await axios.post(`${API_URL}/`, {
+        userId: user?.id,
+        title,
+        amount,
+        selectedCategory,
+      });
+
+      if (!response.data) {
+        const errorData = await response.data();
+        throw new Error(errorData.error || "Failed to create transaction");
+      }
+    } catch (error) {
+    } finally {
+      setLoading(true);
+    }
+  };
+  console.log("selectedCategory",selectedCategory)
+  return (
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Ionicons
+          name={"arrow-back"}
+          onPress={() => router.replace("/(root)/create")}
+          size={24}
+          color={"black"}
+        />
+
+        <Text style={styles.headerTitle}> Create Transaction</Text>
+
+        <TouchableOpacity
+          style={[
+            styles.saveButtonContainer,
+            isLoading && styles.saveButtonDisabled,
+          ]}
+        >
+          <Text style={styles.saveButton}>
+            {" "}
+            {isLoading ? "Saving..." : "Save"}{" "}
+          </Text>
+          {!isLoading && (
+            <Ionicons name="checkmark" size={18} color={COLORS.primary} />
+          )}
+        </TouchableOpacity>
+      </View>
+
+      {/* Card */}
+      <View style={styles.card}>
+        <View style={styles.typeSelector}>
+          <TouchableOpacity
+            onPress={() => setIsExpense(true)}
+            style={[styles.typeButton, isExpense && styles.typeButtonActive]}
+          >
+            <Ionicons
+              name="arrow-down-circle"
+              style={styles.typeIcon}
+              size={22}
+              color={isExpense ? COLORS.white : COLORS.expense}
+            />
+            <Text
+              style={[
+                styles.typeButtonText,
+                isExpense && styles.typeButtonTextActive,
+              ]}
+            >
+              Expense
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setIsExpense(false)}
+            style={[styles.typeButton, !isExpense && styles.typeButtonActive]}
+          >
+            <Ionicons name="arrow-down" style={styles.typeIcon} />
+            <Text style={styles.typeButtonText}>Income</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Amount */}
+        <View style={styles.amountContainer}>
+          <Text style={styles.currencySymbol}>$</Text>
+          <TextInput
+            style={styles.amountInput}
+            placeholder="0.00"
+            placeholderTextColor={COLORS.textLight}
+            value={amount}
+            onChangeText={setAmount}
+            keyboardType="numeric"
+          />
+        </View>
+
+        {/* Input title */}
+        <View style={styles.inputContainer}>
+          <Ionicons
+            name="create-outline"
+            size={22}
+            color={COLORS.textLight}
+            style={styles.inputIcon}
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setTitle}
+            placeholder=""
+          />
+        </View>
+
+        {/*  */}
+        <Text style={styles.sectionTitle}>
+          <Ionicons name="pricetag-outline" size={16 } color={COLORS.text}/>{" "}
+             Category
+        </Text>
+        <View style={styles.categoryGrid}>
+          {Object.entries(CATEGORY_ICONS).map((category: any) =>  (
+           
+            <TouchableOpacity
+              key={category.id}
+              style={[
+                styles.categoryButton,
+                selectedCategory === category.name && styles.categoryButtonActive,
+              ]}
+              onPress={() => setSelectedCategory(category.name)}
+            >
+              <Ionicons
+                name={category.icon}
+                size={20}
+                color={selectedCategory === category.name ? COLORS.white : COLORS.text}
+                style={styles.categoryIcon}
+              />
+              <Text
+                style={[
+                  styles.categoryButtonText,
+                  selectedCategory === category.name && styles.categoryButtonTextActive,
+                ]}
+              >
+                {category.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {!isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        </View>
+      )}
+    </View>
+  );
+};
+
+export default create;

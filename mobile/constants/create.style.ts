@@ -83,6 +83,7 @@ export const styles = StyleSheet.create({
     borderBottomColor: COLORS.border,
     paddingBottom: 16,
     marginBottom: 20,
+    overflow:"hidden"
   },
   currencySymbol: {
     fontSize: 32,

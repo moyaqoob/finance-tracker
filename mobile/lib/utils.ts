@@ -6,3 +6,4 @@ export function formatDate(dateString:any) {
     day: "numeric",
   });
 }
+

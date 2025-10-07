@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
-const API_URL = process.env.API_URL;
+import { API_URL } from "@/lib/config";
+
 function useTransaction(userId: any) {
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState({
