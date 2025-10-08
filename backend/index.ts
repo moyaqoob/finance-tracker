@@ -36,6 +36,7 @@ async function initDb() {
 }
 
 app.get("/", (_req, res) => {
+  console.log("hit the backend")
   res.status(200).json({status:"Ok"});
 });
 
