@@ -25,22 +25,30 @@ const Home = () => {
   const router = useRouter();
   const { transactions, summary, isLoading, loadData, deleteTransaction } =
     useTransaction(user?.id);
-  const [refreshing,setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh =async()=>{
+  const onRefresh = async () => {
     setRefreshing(true);
     await loadData();
     setRefreshing(false);
-  }
+  };
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
+  if (typeof window !== "undefined") {
+    // Web/Desktop
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this transaction?"
+    );
+    if (confirmed) deleteTransaction(id);
+  } else {
+    // Mobile
     Alert.alert(
       "Delete Transaction",
-      "Are you sure you want to delete this transaction",
+      "Are you sure you want to delete this transaction?",
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -50,9 +58,13 @@ const Home = () => {
         },
       ]
     );
-  };
+  }
+};
 
-  if (isLoading && !refreshing) return <PageLoader />;
+
+  console.log("transactions", transactions);
+
+  // if (isLoading && !refreshing) return <PageLoader />;
 
   return (
     <View style={styles.container}>
@@ -100,7 +112,9 @@ const Home = () => {
         )}
         ListEmptyComponent={<NoTransactionListContent />}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

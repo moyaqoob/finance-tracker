@@ -112,8 +112,12 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   statDivider: {
-    borderRightWidth: 2,
-    borderColor: COLORS.border,
+    // vertical divider between amount and delete button
+    width: 1,
+    height: 22,
+    backgroundColor: COLORS.border,
+    marginHorizontal: 6,
+    alignSelf: "center",
   },
   balanceStatLabel: {
     fontSize: 14,
@@ -175,6 +179,7 @@ export const styles = StyleSheet.create({
   },
   transactionRight: {
     alignItems: "flex-end",
+    marginRight: 6,
   },
   transactionAmount: {
     fontSize: 16,
@@ -186,9 +191,7 @@ export const styles = StyleSheet.create({
     color: COLORS.textLight,
   },
   deleteButton: {
-    padding: 15,
-    borderLeftWidth: 1,
-    borderLeftColor: COLORS.border,
+    padding: 8,
   },
   transactionsContainer: {
     marginBottom: 20,

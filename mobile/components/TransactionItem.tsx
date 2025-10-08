@@ -6,12 +6,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 export interface TransactionProps {
   item: {
-    id: string;
+    id: number;
     title: string;
     amount: string;
     category: string;
   };
-  onDelete: (handleDelete: string) => void;
+  onDelete: (id: number) => void;
 }
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
 
@@ -24,7 +24,6 @@ export const CATEGORY_ICONS: Record<string, IoniconName> = {
   Income: "cash-outline",
   Other: "pricetag-outline",
 };
-
 
 const TransactionItem = ({ item, onDelete }: TransactionProps) => {
   const isIncome = parseFloat(item.amount) > 0;
@@ -40,8 +39,8 @@ const TransactionItem = ({ item, onDelete }: TransactionProps) => {
           />
         </View>
         <View style={styles.transactionLeft}>
-          <Text>{item.title}</Text>
-          <Text>{item.category} </Text>
+          <Text style={{textTransform:"capitalize"}}>{item.title}</Text>
+          <Text style={{textTransform:"lowercase",color:"gray"}}>{item.category} </Text>
         </View>
         <View style={styles.transactionRight}>
           <Text
@@ -54,8 +53,11 @@ const TransactionItem = ({ item, onDelete }: TransactionProps) => {
           </Text>
         </View>
         <View style={styles.statDivider} />
-        <TouchableOpacity onPress={()=>onDelete(item.id)} style={styles.deleteButton}>
-          <Ionicons name="trash" size={20} color="red" />
+        <TouchableOpacity
+          onPress={() => onDelete(item.id)}
+          style={styles.deleteButton}
+        >
+          <Ionicons name="trash" size={16} color="red" />
         </TouchableOpacity>
       </TouchableOpacity>
     </View>

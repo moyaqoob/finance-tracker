@@ -30,7 +30,6 @@ export default function SignUpScreen() {
         emailAddress,
         password,
       });
-      console.log("result", result.id);
 
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);

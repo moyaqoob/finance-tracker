@@ -1,1 +1,1 @@
-export const API_URL = process.env.API_URL;
+export const API_URL = "https://finance-tracker-n71o.onrender.com/api/transactions";

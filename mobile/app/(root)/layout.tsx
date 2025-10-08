@@ -1,15 +1,16 @@
 import { useUser } from "@clerk/clerk-expo";
-import { Redirect, Stack } from "expo-router";
+import { Redirect, Stack, useSegments } from "expo-router";
 
+export default function Layout() {
+  const { isSignedIn, isLoaded } = useUser();
+  const segments = useSegments(); 
+  if (!isLoaded) return null; 
 
+  const currentSegment = segments[1]; 
 
-export default function Layout(){
-    const {isSignedIn,isLoaded} = useUser();
+  if (!isSignedIn && currentSegment !== "Signin" && currentSegment !== "Signup") {
+    return <Redirect href="/Signin" />;
+  }
 
-    if(!isLoaded) return null;
-
-    if(!isSignedIn) return <Redirect href={"/(auth)/Signin"} />
-    
-
-    return <Stack screenOptions={{headerShown:false}}/>
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

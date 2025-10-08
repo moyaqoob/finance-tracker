@@ -41,16 +41,17 @@ const create = () => {
     const formattedAmount = isExpense
       ? -Math.abs(parseFloat(amount))
       : Math.abs(parseFloat(amount));
-
-    const response = await axios.post(`${API_URL}/`, {
-      userId: user?.id,
+    console.log("formatted amt",formattedAmount)
+    const response= await axios.post(`${API_URL}/create`, {
+      user_id: user?.id,
       title,
       amount: formattedAmount,
       category: selectedCategory,
     });
+    console.log("response",response.data,response.status)
 
-    console.log("Response:", response.data);
     Alert.alert("Success", "Transaction saved successfully!");
+    router.replace("/(root)/home")
   } catch (error) {
     console.error("Error saving transaction:", error);
     Alert.alert("Error", "Server Error Occurred");
@@ -69,7 +70,7 @@ const create = () => {
       <View style={styles.header}>
         <Ionicons
           name={"arrow-back"}
-          onPress={() => router.replace("/(root)/create")}
+          onPress={() => router.replace("/(root)/home")}
           size={24}
           color={"black"}
         />
@@ -89,7 +90,6 @@ const create = () => {
           </Text>
           {!isLoading && (
             <Ionicons name="checkmark" size={18} color={COLORS.primary} 
-           
             />
           )}
         </TouchableOpacity>

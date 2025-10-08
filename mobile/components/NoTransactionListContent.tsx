@@ -22,7 +22,7 @@ const NoTransactionListContent = () => {
         onPress={() => router.replace("/(root)/create")}
         style={styles.emptyStateButton}
       >
-        <Ionicons name="add-circle" style={{alignItems:"center"}} color={"white"} size={12}/>
+        <Ionicons name="add-circle" style={{alignItems:"center"}} color={"white"} size={18}/>
 
         <Text style={styles.emptyStateButtonText}>Add Transaction</Text>
       </TouchableOpacity>
