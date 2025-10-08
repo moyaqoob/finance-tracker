@@ -12,7 +12,9 @@ router.get("/:userId", async (req, res) => {
             SELECT * FROM transactions
             WHERE user_id = ${userId} ORDER BY created_at DESC`;
     console.log("get teh transactions",transactions);
-    res.status(200).json(transactions);
+    res.status(200).json({
+      transactions:transactions
+    });
   } catch (error) {
     console.log("Error occured in the server", error);
     res.status(500).json({ message: "Server error occured" });
@@ -43,7 +45,7 @@ router.get("/summary/:userId", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
   try {
     const { title, amount, category, user_id } = req.body;
 
