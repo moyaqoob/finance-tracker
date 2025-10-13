@@ -38,13 +38,7 @@ const Home = () => {
   }, [loadData]);
 
   const handleDelete = (id: number) => {
-  if (typeof window !== "undefined") {
-    // Web/Desktop
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this transaction?"
-    );
-    if (confirmed) deleteTransaction(id);
-  } else {
+ 
     // Mobile
     Alert.alert(
       "Delete Transaction",
@@ -58,7 +52,7 @@ const Home = () => {
         },
       ]
     );
-  }
+  
 };
 
 

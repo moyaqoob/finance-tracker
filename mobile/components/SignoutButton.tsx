@@ -9,17 +9,10 @@ export const SignOutButton = () => {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    if (typeof window != "undefined") {
-      const confirmed = window.confirm("Are you sure you want to Logout?");
-      if(confirmed) signOut();
-
-      router.replace("/Signin")
-    } else {
-      Alert.alert("Logout", "Are you sure you want to logout?", [
-        { text: "Cancel", style: "cancel" },
-        { text: "Logout", style: "destructive", onPress: () => signOut() },
-      ]);
-    }
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Logout", style: "destructive", onPress: () => signOut() },
+    ]);
   };
 
   return (
