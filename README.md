@@ -1,4 +1,4 @@
-# Finance Tracker App
+# Finance Tracker App 💵
 
 A simple and intuitive app to **keep track of your finances**, built using **React Native**, **Expo**, and **Node.js**. Manage your income, expenses, and overall financial health on the go.
 
@@ -12,9 +12,4 @@ A simple and intuitive app to **keep track of your finances**, built using **Rea
 - Secure sign-up and login
 - Easy-to-use, mobile-friendly interface
 
-<div align="center">
-  <video width="300" style="border-radius:30px; box-shadow:0px 4px 10px rgba(0,0,0,0.2);" controls>
-    <source src="https://github.com/user-attachments/assets/b25fcfc7-686c-4389-a6b9-134ef0d1370a" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</div>
+Check out the **intro video** [here](https://github.com/user-attachments/assets/b25fcfc7-686c-4389-a6b9-134ef0d1370a) to see the app in action.
